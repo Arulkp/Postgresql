@@ -31,3 +31,8 @@ select name,salary,ntile(3) over( order by salary desc)rank from employee;
 -- Get without active supplier product 
 with data as (select product_tmpl_id,string_agg(active_supplier::text,',') as asup from product_supplierinfo GROUP BY product_tmpl_id)
 select * from data WHERE asup not LIKE '%true%'
+
+
+with data as (select pt.id,string_agg(ps.active_supplier::text,',') as asup from product_template as pt left join product_supplierinfo as ps  on ps.product_tmpl_id = pt.id where pt.active = true GROUP BY pt.id)
+select * from data WHERE asup not LIKE '%true%' or asup is null
+
